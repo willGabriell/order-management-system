@@ -3,6 +3,8 @@ package com.order_management_system.model;
 import com.order_management_system.enums.StatusPedido;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.util.Date;
 import java.util.List;
@@ -10,6 +12,7 @@ import java.util.List;
 @Entity
 @Table
 @Data
+@EntityListeners(AuditingEntityListener.class)
 public class Pedido {
 
     @Id
@@ -19,6 +22,7 @@ public class Pedido {
     @ManyToOne
     private Cliente cliente;
 
+    @CreatedDate
     private Date dataPedido;
 
     @Enumerated(EnumType.STRING)

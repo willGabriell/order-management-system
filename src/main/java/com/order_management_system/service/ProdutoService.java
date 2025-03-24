@@ -45,4 +45,8 @@ public class ProdutoService {
         return produtoRepository.save(produto);
     }
 
+    public List<Produto> buscarTodosPorId(List<Long> ids) {
+        return produtoRepository.findAllById(ids);
+    }
+
 }
