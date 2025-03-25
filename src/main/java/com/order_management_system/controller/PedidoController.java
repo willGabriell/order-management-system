@@ -2,15 +2,15 @@ package com.order_management_system.controller;
 
 import com.order_management_system.dto.pedido.PedidoRequestDto;
 import com.order_management_system.dto.pedido.PedidoResponseDto;
+import com.order_management_system.dto.status.StatusDto;
+import com.order_management_system.enums.StatusPedido;
 import com.order_management_system.model.Pedido;
 import com.order_management_system.service.PedidoService;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -30,16 +30,29 @@ public class PedidoController {
         return ResponseEntity.status(HttpStatus.CREATED).body(dtoResposta);
     }
 
-    public ResponseEntity<PedidoResponseDto> buscarPorId() {
-        return null;
+    @GetMapping("/{id}")
+    public ResponseEntity<PedidoResponseDto> buscarPorId(@PathVariable Long id) {
+        Pedido pedido = pedidoService.buscarPorId(id);
+        PedidoResponseDto dtoResposta = new PedidoResponseDto(pedido);
+
+        return ResponseEntity.ok(dtoResposta);
     }
 
-    public List<ResponseEntity<PedidoResponseDto>> buscarTodos() {
-        return null;
+    @GetMapping
+    public ResponseEntity<List<PedidoResponseDto>> buscarTodos() {
+        List<Pedido> pedidos = pedidoService.buscarTodos();
+        List<PedidoResponseDto> pedidosDto = PedidoResponseDto.toList(pedidos);
+
+        return ResponseEntity.ok(pedidosDto);
     }
 
-    public ResponseEntity<PedidoResponseDto> atualizarStatusPedido() {
-        return null;
+    @PutMapping("/{id}/status")
+    public ResponseEntity<PedidoResponseDto> atualizarStatusPedido(@PathVariable Long id, @RequestBody @NotNull StatusDto statusDto) {
+        Pedido p = pedidoService.buscarPorId(id);
+        StatusPedido status = statusDto.getStatus();
+        Pedido pedidoAtualizado = pedidoService.atualizarStatusPedido(p, status);
+        PedidoResponseDto dtoResposta = new PedidoResponseDto(pedidoAtualizado);
+        return ResponseEntity.status(HttpStatus.OK).body(dtoResposta);
     }
 
 }

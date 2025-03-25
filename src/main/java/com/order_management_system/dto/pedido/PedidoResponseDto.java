@@ -31,4 +31,8 @@ public class PedidoResponseDto {
         this.itensPedido = pedido.getItensPedido();
     }
 
+    public static List<PedidoResponseDto> toList(List<Pedido> pedidos) {
+        return pedidos.stream().map(PedidoResponseDto::new).collect(Collectors.toList());
+    }
+
 }

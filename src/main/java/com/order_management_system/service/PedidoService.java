@@ -58,7 +58,11 @@ public class PedidoService {
         return pedidoRepository.findAll();
     }
 
-    public Pedido atualizarPedido(Pedido pedido) {
+    public Pedido atualizarStatusPedido(Pedido pedido, @NotNull StatusPedido status) {
+        if (status == null) {
+            throw new IllegalArgumentException("Status não pode ser nulo");
+        }
+        pedido.setStatus(status);
         return pedidoRepository.save(pedido);
     }
 }
