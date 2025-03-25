@@ -10,6 +10,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +24,8 @@ public class PedidoService {
 
     public Pedido criarPedido(@NotNull PedidoRequestDto dto) {
         Pedido pedidoNovo = new Pedido();
+        BigDecimal valorTotal = BigDecimal.ZERO;
+
         pedidoNovo.setCliente(clienteService.buscarPorId(dto.getClienteId()));
         pedidoNovo.setStatus(StatusPedido.EM_PROCESSAMENTO);
 
@@ -33,14 +36,16 @@ public class PedidoService {
             Produto p = produtoService.buscarPorId(itemDto.getProdutoId());
 
             if (p.getQuantidadeEstoque() < itemDto.getQuantidade()) {
-                throw new IllegalArgumentException("A quantidade de: " + p.getNome() + "estoque é menor que a quantidade solicitada");
+                throw new IllegalArgumentException("Estoque insuficiente para o produto " + p.getNome());
             }
 
+            valorTotal = valorTotal.add(p.getPreco().multiply(new BigDecimal(itemDto.getQuantidade())));
             p.setQuantidadeEstoque(p.getQuantidadeEstoque() - itemDto.getQuantidade());
             produtoService.atualizarProduto(p.getId(), p);
             itensPedido.add(p);
         }
 
+        pedidoNovo.setValorTotal(valorTotal);
         pedidoNovo.setItensPedido(itensPedido);
         return pedidoRepository.save(pedidoNovo);
     }

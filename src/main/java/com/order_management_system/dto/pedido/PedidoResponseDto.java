@@ -5,6 +5,7 @@ import com.order_management_system.model.Pedido;
 import com.order_management_system.model.Produto;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,6 +17,7 @@ public class PedidoResponseDto {
     private Long clienteId;
     private String clienteNome;
     private Date dataPedido;
+    private BigDecimal valorTotal;
     private StatusPedido status;
     private List<Produto> itensPedido;
 
@@ -23,6 +25,7 @@ public class PedidoResponseDto {
         this.id = pedido.getId();
         this.clienteId = pedido.getCliente().getId();
         this.clienteNome = pedido.getCliente().getNome();
+        this.valorTotal = pedido.getValorTotal();
         this.dataPedido = pedido.getDataPedido();
         this.status = pedido.getStatus();
         this.itensPedido = pedido.getItensPedido();
