@@ -1,5 +1,6 @@
 package com.order_management_system.dto.pedido;
 
+import com.order_management_system.dto.itemPedido.ItemPedidoDto;
 import com.order_management_system.enums.StatusPedido;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -13,6 +14,6 @@ public class PedidoRequestDto {
     private Long clienteId;
 
     @NotNull(message = "A lista de itens do pedido é obrigatória")
-    private List<Long> itensPedidoId;
+    private List<ItemPedidoDto> itensPedido;
 
 }
